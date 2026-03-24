@@ -1,0 +1,134 @@
+{% extends 'myapp/base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h2 class="mb-4 fw-bold">My Bookings 🎟</h2>
+
+{% if messages %}
+{% for message in messages %}
+<div id="success-message" class="alert alert-success">
+{{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if bookings %}
+
+<div class="row">
+
+{% for booking in bookings %}
+
+<div class="col-md-6 mb-4">
+
+<div class="card shadow booking-card">
+
+<div class="row g-0">
+
+<!-- Movie Poster -->
+<div class="col-md-4 text-center p-3">
+<img src="{{ booking.show.movie.poster.url }}"
+class="img-fluid rounded"
+alt="movie poster">
+</div>
+
+<!-- Booking Details -->
+<div class="col-md-8">
+
+<div class="card-body">
+
+<h5 class="card-title text-primary">
+{{ booking.show.movie.title }}
+</h5>
+
+<p class="mb-2">
+<strong>Show Time:</strong> {{ booking.show.show_time }}
+</p>
+
+<p class="mb-2">
+<strong>Seats:</strong>
+
+{% for seat in booking.seats.all %}
+<span class="badge bg-secondary">
+{{ seat.seat_number }}
+</span>
+{% endfor %}
+
+</p>
+
+<p class="mb-3">
+<strong>Total Paid:</strong>
+<span class="text-success fw-bold">
+₹{{ booking.total_amount }}
+</span>
+</p>
+
+<form action="{% url 'cancel_booking' booking.id %}" method="post">
+{% csrf_token %}
+
+<button type="submit"
+onclick="return confirm('Are you sure you want to cancel this booking?')" 
+class="btn btn-danger btn-sm">
+
+Cancel Booking
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="alert alert-info">
+No bookings yet.
+</div>
+
+{% endif %}
+
+</div>
+
+<style>
+
+.booking-card{
+border-radius:12px;
+border:none;
+transition:0.3s;
+}
+
+.booking-card:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.badge{
+font-size:12px;
+padding:6px 8px;
+margin-right:3px;
+}
+
+</style>
+
+<script>
+setTimeout(function() {
+var msg = document.getElementById("success-message");
+if (msg) {
+msg.style.display = "none";
+}
+}, 3000);
+</script>
+
+{% endblock %}

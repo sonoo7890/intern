@@ -1,0 +1,139 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+
+<div id="success-message" class="alert alert-success">
+{{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- Banner Slider -->
+
+<div id="movieCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+
+<div class="carousel-inner">
+
+<div class="carousel-item active">
+<img src="{% static 'images/banner1.jpg' %}" class="d-block w-100 banner-img">
+</div>
+
+<div class="carousel-item">
+<img src="{% static 'images/banner2.jpg' %}" class="d-block w-100 banner-img">
+</div>
+
+<div class="carousel-item">
+<img src="{% static 'images/banner3.jpg' %}" class="d-block w-100 banner-img">
+</div>
+
+</div>
+
+<button class="carousel-control-prev" type="button" data-bs-target="#movieCarousel" data-bs-slide="prev">
+<span class="carousel-control-prev-icon"></span>
+</button>
+
+<button class="carousel-control-next" type="button" data-bs-target="#movieCarousel" data-bs-slide="next">
+<span class="carousel-control-next-icon"></span>
+</button>
+
+</div>
+
+<h3 class="mb-4 fw-bold">Recommended Movies</h3>
+
+<div class="row">
+
+{% for movie in movies %}
+
+<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-4">
+
+<div class="card movie-card h-100 shadow-sm">
+
+<img src="{{ movie.image.url }}" class="card-img-top movie-img">
+
+<div class="card-body d-flex flex-column">
+
+<h6 class="card-title fw-bold">{{ movie.title }}</h6>
+
+<p class="card-text small">
+{{ movie.description|truncatewords:12 }}
+</p>
+
+<div class="mt-auto">
+
+<h6 class="mt-2 small">Show Times</h6>
+
+<div class="d-flex flex-wrap gap-1">
+
+{% for show in movie.show_set.all|slice:":3" %}
+
+<a href="{% url 'show_detail' show.id %}" 
+class="btn btn-outline-primary btn-sm">
+
+{{ show.show_time }}
+
+</a>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<style>
+
+/* Banner */
+.banner-img{
+width:100%;
+height:420px;
+object-fit:contain;
+background:#000;
+border-radius:10px;
+}
+/* Movie Image */
+
+.movie-img{
+height:260px;
+object-fit:cover;
+}
+
+/* Movie Card */
+
+.movie-card{
+transition:0.3s;
+border-radius:10px;
+overflow:hidden;
+}
+
+.movie-card:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+</style>
+
+<script>
+
+setTimeout(function() {
+var msg = document.getElementById("success-message");
+if (msg) {
+msg.style.display = "none";
+}
+}, 3000);
+
+</script>
+
+{% endblock %}
